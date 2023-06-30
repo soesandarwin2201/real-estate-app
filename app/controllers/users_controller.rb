@@ -20,7 +20,7 @@ class UsersController < ApplicationController
        id = @user.id
    
        @phones = params[:phones].map do |phone| 
-         Phone.create!(number: phone, user_id: id)
+         Phone.create!(number: phone, users_id: id)
        end
    
        Phone.import(@phones) # Use `import` for bulk insertion
