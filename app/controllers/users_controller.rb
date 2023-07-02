@@ -15,20 +15,23 @@ class UsersController < ApplicationController
 
   # POST /users
   def create 
-     @user = User.new(user_params)
-     if @user.save
-       id = @user.id
-   
-       @phones = params[:phones].map do |phone| 
-         Phone.create!(number: phone, users_id: id)
-       end
-   
-       Phone.import(@phones) # Use `import` for bulk insertion
-       render json: @user, status: :created
-     else 
-       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-     end
-   end
+    @user = User.new(user_params)
+    if @user.save
+      id = @user.id
+  
+      phones = params[:phones] # Check the value of params[:phones]
+      puts "Phones received: #{phones.inspect}" # Print the phones for debugging
+  
+      @phones = phones.map do |phone| 
+        Phone.create!(number: phone, user_id: id)
+      end
+  
+      Phone.import(@phones) # Use `import` for bulk insertion
+      render json: @user, status: :created
+    else 
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
 
   # PUT /users/{username}
   def update

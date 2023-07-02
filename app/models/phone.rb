@@ -1,4 +1,4 @@
 class Phone < ApplicationRecord
-  belongs_to :users
-  validates :address, presence: true
+  belongs_to :user
+  validates :number, presence: true
 end
