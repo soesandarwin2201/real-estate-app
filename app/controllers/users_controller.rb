@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-     before_action :authorize_request, except: :create
-     before_action :find_user, except: %i[create index]
+  before_action :authorize_request, except: :create
+  before_action :find_user, except: %i[create index]
 
   # GET /users
   def index
-     @users = User.includes(:phones).all
+    @users = User.includes(:phones).all
     render json: @users, status: :ok
   end
 
@@ -14,21 +14,21 @@ class UsersController < ApplicationController
   end
 
   # POST /users
-  def create 
+  def create
     @user = User.new(user_params)
     if @user.save
       id = @user.id
-  
+
       phones = params[:phones] # Check the value of params[:phones]
       puts "Phones received: #{phones.inspect}" # Print the phones for debugging
-  
-      @phones = phones.map do |phone| 
+
+      @phones = phones.map do |phone|
         Phone.create!(number: phone, user_id: id)
       end
-  
+
       Phone.import(@phones) # Use `import` for bulk insertion
       render json: @user, status: :created
-    else 
+    else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
@@ -46,29 +46,47 @@ class UsersController < ApplicationController
     @user.destroy
   end
 
-  def google 
+  def google
+    puts "Received google sign-in request"
+    access_token = params[:access_token]
+    puts "Access token: #{access_token}"
     begin
-      data = Google:Auth::IDToken.verify_oidc(access_token, aud: '203263028732-1hkgorsrn4fogvtufmqicskt6ud1kvca.apps.googleusercontent.com')
-      rescue StandardError => e
-    end
-    rescue => exception
-      
-    else
-      
+      data = Google::Auth::IDTokens.verify_oidc(access_token, aud: 'YOUR_GOOGLE_CLIENT_ID')
+      puts "Token verification successful"
+      puts "Data: #{data.inspect}"
+
+      # Find or create the user based on the received data
+      user = User.find_by(email: data['email'])
+
+      if user.nil?
+        user = User.new(email: data['email'], name: data['name'])
+
+        if user.save
+          puts "New user created: #{user.email}"
+        else
+          puts "User creation failed. Errors: #{user.errors.full_messages}"
+          # Handle the validation errors appropriately
+        end
+      else
+        puts "User found: #{user.email}"
+      end
+    rescue StandardError => e
+      puts "Token verification failed: #{e.message}"
     end
   end
 
   private
 
   def find_user
-     @user = User.includes(:phones).find_by!(name: params[:name])
-   rescue ActiveRecord::RecordNotFound
-     render json: { errors: 'User not found' }, status: :not_found
-   end
+    @user = User.includes(:phones).find_by!(username: params[:username])
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: 'User not found' }, status: :not_found
+  end
 
   def user_params
     params.permit(
-     :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, phones: []
+      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, phones: []
     )
   end
 end
+
