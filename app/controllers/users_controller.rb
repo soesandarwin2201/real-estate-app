@@ -46,6 +46,18 @@ class UsersController < ApplicationController
     @user.destroy
   end
 
+  def google 
+    begin
+      data = Google:Auth::IDToken.verify_oidc(access_token, aud: '203263028732-1hkgorsrn4fogvtufmqicskt6ud1kvca.apps.googleusercontent.com')
+      rescue StandardError => e
+    end
+    rescue => exception
+      
+    else
+      
+    end
+  end
+
   private
 
   def find_user

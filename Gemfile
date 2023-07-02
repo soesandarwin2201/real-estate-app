@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.2.1"
 
+gem 'rack-cors'
+
 # Use Json Web Token (JWT) for token based authentication
 gem 'jwt'
 # Use ActiveModel has_secure_password
