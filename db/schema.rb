@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_02_043652) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_03_132830) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "houses", force: :cascade do |t|
+    t.string "name"
+    t.integer "bathroom"
+    t.integer "bedroom"
+    t.string "address"
+    t.string "home_status"
+    t.string "home_type"
+    t.boolean "advertise"
+    t.float "price"
+    t.string "desc"
+    t.string "square"
+    t.string "zone"
+    t.integer "floor"
+    t.boolean "tv"
+    t.boolean "bacon"
+    t.boolean "ac"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_houses_on_user_id"
+  end
 
   create_table "phones", force: :cascade do |t|
     t.string "number"
@@ -34,5 +56,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_02_043652) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "houses", "users"
   add_foreign_key "phones", "users"
 end
