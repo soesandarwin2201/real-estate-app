@@ -23,7 +23,7 @@ class UsersController < ApplicationController
       puts "Phones received: #{phones.inspect}" # Print the phones for debugging
 
       @phones = phones.map do |phone|
-        Phone.create!(number: phone, user_id: id)
+        Phone.create!(number: phone.to_i, user_id: id)
       end
 
       Phone.import(@phones) # Use `import` for bulk insertion
@@ -84,8 +84,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(
-      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, phones: []
+    params[:phones].permit(
+      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name
     )
   end
 end
