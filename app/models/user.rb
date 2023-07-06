@@ -12,4 +12,5 @@ class User < ApplicationRecord
             if: -> { new_record? || !password.nil? }
 
   has_many :phones
+  has_many :houses
 end
