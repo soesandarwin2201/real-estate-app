@@ -18,10 +18,14 @@ class HousesController < ApplicationController
       end
     end
 
-    def destory 
+    def destroy 
      @house = House.find(params[:id])
-     @house.destory
-    end
+     if @house.destroy
+       render json: { message: 'House deleted successfully' }
+     else
+       render json: { error: 'Failed to delete the house' }, status: :unprocessable_entity
+     end
+   end
 
     private 
     def house_params

@@ -17,6 +17,7 @@ class House < ApplicationRecord
   validates :bacon, presence: true, allow_blank: true
   validates :ac, presence: true, allow_blank: true
   validates :images, presence: true
+  
   belongs_to :user
   has_many_attached :images
 end
