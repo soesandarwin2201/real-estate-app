@@ -1,7 +1,7 @@
 user = User.create!(
-  name: 'ha yoyo',
-  username: 'ha roro',
-  email: 'haroro2023@gmail.com',
+  name: 'lily rose',
+  username: 'lily rose',
+  email: 'lilyrose2023@gmail.com',
   password: 'koko23052020',
   address: 'mandalay,myanmar',
   details: 'this is the test for the phone',
@@ -9,6 +9,10 @@ user = User.create!(
 )
 
 user_phone = Phone.create!(number: '09783307421', user_id: user.id)
+user_image = user.avatar.attach(
+  io: File.open(Rails.root.join('db/images/new.png')),
+  filename: 'new.png'
+)
 
 user_house = House.create!(
   name: 'house 1',
