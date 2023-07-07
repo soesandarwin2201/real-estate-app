@@ -5,12 +5,12 @@ class UsersController < ApplicationController
   # GET /users
   def index
     @users = User.includes(:phones).all
-    render json: @users, status: :ok
+    render json: @users.to_json(include: :phones), status: :ok
   end
 
   # GET /users/{username}
   def show
-    render json: @user, status: :ok
+    render json: @user.to_json(include: :phones), status: :ok
   end
 
   # POST /users
@@ -85,7 +85,7 @@ class UsersController < ApplicationController
 
   def user_params
     params[:phones].permit(
-      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name
+      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar
     )
   end
 end
