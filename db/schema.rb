@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_05_101709) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_07_100415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,6 +62,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_101709) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_houses_on_user_id"
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.integer "user_id"
+    t.boolean "liked"
+    t.integer "browsed_user_id"
+    t.string "pair_id"
+    t.datetime "last_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["browsed_user_id"], name: "index_matches_on_browsed_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "recipient_id"
+    t.text "content"
+    t.string "pair_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recipient_id"], name: "index_messages_on_recipient_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "phones", force: :cascade do |t|
