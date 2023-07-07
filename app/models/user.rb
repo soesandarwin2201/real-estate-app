@@ -10,6 +10,7 @@ class User < ApplicationRecord
   validates :password,
             length: { minimum: 6 },
             if: -> { new_record? || !password.nil? }
+  validates :avatar, presence: true
 
   has_many :phones
   has_many :houses
