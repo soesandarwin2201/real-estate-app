@@ -35,10 +35,9 @@ class UsersController < ApplicationController
 
   # PUT /users/{username}
   def update
-    unless @user.update(user_params)
-      render json: { errors: @user.errors.full_messages },
-             status: :unprocessable_entity
-    end
+    @user = User.find(params[:id])
+    @user.update!(user_params)
+    render json: @user, serializer: UserShowSerializer, status: :accepted
   end
 
   # DELETE /users/{username}
