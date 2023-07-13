@@ -1,7 +1,7 @@
 user = User.create!(
-  name: 'kageyama',
-  username: 'kageyama',
-  email: 'kageyama2023@gmail.com',
+  name: 'dory',
+  username: 'dory',
+  email: 'dory2023@gmail.com',
   password: 'koko23052020',
   address: 'mandalay,myanmar',
   details: 'this is the test for the phone',
