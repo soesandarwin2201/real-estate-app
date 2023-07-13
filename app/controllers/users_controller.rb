@@ -19,7 +19,8 @@ class UsersController < ApplicationController
     if @user.save
       id = @user.id
 
-      phones = params[:phones] # Check the value of params[:phones]
+      phones = params[:phones]
+      puts params[:phones].class  # Check the value of params[:phones]
       puts "Phones received: #{phones.inspect}" # Print the phones for debugging
 
       @phones = phones.map do |phone|
@@ -83,8 +84,9 @@ class UsersController < ApplicationController
   end
 
   def user_params
+    puts params[:phones].class 
     params.permit(
-      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar, :phones
+      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar, phones: []
     )
   end
 end
