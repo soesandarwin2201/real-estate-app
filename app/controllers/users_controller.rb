@@ -4,23 +4,29 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
-    render json: @users, status: :ok
+    @users = User.includes(:phones).all
+    render json: @users.to_json(include: :phones), status: :ok
   end
 
   # GET /users/{username}
   def show
-    render json: @user, status: :ok
+    render json: @user.to_json(include: :phones), status: :ok
   end
 
   # POST /users
   def create
     @user = User.new(user_params)
     if @user.save
-      token = JsonWebToken.encode(user_id: @user.id)
-      time = Time.now + 7.days.to_i
-      render json: { token:, exp: time.strftime('%m-%d-%Y %H:%M'),
-                     user: @user }, status: :ok
+      id = @user.id
+
+      phones = params[:phones].split(",")
+
+      @phones = phones.map do |phone|
+        {number: phone, user_id: id}
+      end
+
+      Phone.insert_all(@phones)
+      render json: @users.to_json(include: :phones), status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -77,8 +83,9 @@ class UsersController < ApplicationController
 
   def user_params
     params.permit(
-      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar, :phone
+      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar
     )
   end
 end
+
 
