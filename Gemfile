@@ -5,6 +5,9 @@ ruby "3.2.1"
 
 gem 'rack-cors'
 
+gem 'activerecord-import'
+
+
 gem 'active_model_serializers'
 
 # Use Json Web Token (JWT) for token based authentication

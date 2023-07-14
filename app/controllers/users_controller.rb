@@ -4,31 +4,23 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.includes(:phones).all
-    render json: @users.to_json(include: :phones), status: :ok
+    @users = User.all
+    render json: @users, status: :ok
   end
 
   # GET /users/{username}
   def show
-    render json: @user.to_json(include: :phones), status: :ok
+    render json: @user, status: :ok
   end
 
   # POST /users
   def create
     @user = User.new(user_params)
     if @user.save
-      id = @user.id
-
-      phones = params[:phones]
-      puts params[:phones].class  # Check the value of params[:phones]
-      puts "Phones received: #{phones.inspect}" # Print the phones for debugging
-
-      @phones = phones.map do |phone|
-        Phone.create!(number: phone.to_i, user_id: id)
-      end
-
-      Phone.import(@phones) # Use `import` for bulk insertion
-      render json: @user, status: :created
+      token = JsonWebToken.encode(user_id: @user.id)
+      time = Time.now + 7.days.to_i
+      render json: { token:, exp: time.strftime('%m-%d-%Y %H:%M'),
+                     user: @user }, status: :ok
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -84,9 +76,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    puts params[:phones].class 
     params.permit(
-      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar, phones: []
+      :name, :username, :email, :password, :password_confirmation, :address, :details, :company_name, :avatar, :phone
     )
   end
 end

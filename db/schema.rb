@@ -86,18 +86,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_100415) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
-  create_table "phones", force: :cascade do |t|
-    t.string "number"
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_phones_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "username"
     t.string "email"
+    t.string "phone"
     t.string "password_digest"
     t.string "address"
     t.string "details"
@@ -109,5 +102,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_07_100415) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "houses", "users"
-  add_foreign_key "phones", "users"
 end
